@@ -1,85 +1,273 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>Invoice</title>
- <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-	<style>
-    	body { font-family: Arial, sans-serif; }
-    	.invoice-box {
-        	width: 80%;
-        	margin: auto;
-        	border: 1px solid #eee;
-        	padding: 20px;
-    	}
-    	.header {
-        	text-align: center;
-        	border-bottom: 1px solid #ddd;
-        	padding-bottom: 10px;
-    	}
-    	table { width: 100%; margin-top: 20px; border-collapse: collapse; }
-    	th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    	th { background-color: #f5f5f5; }
-	</style>
+    <meta charset="utf-8">
+    <title>SmartCart Invoice</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            margin:20px;
+            color:#333;
+        }
+
+        .invoice-box{
+            max-width:900px;
+            margin:auto;
+            border:1px solid #ddd;
+            padding:30px;
+        }
+
+        .header{
+            text-align:center;
+            border-bottom:2px solid #ddd;
+            padding-bottom:15px;
+            margin-bottom:20px;
+        }
+
+        .header h1{
+            margin:0;
+            color:#2c3e50;
+        }
+
+        .section-title{
+            background:#f5f5f5;
+            padding:10px;
+            margin-top:20px;
+            border-left:4px solid #28a745;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:15px;
+        }
+
+        th{
+            background:#f5f5f5;
+        }
+
+        th,
+        td{
+            border:1px solid #ddd;
+            padding:10px;
+            text-align:left;
+        }
+
+        .total-box{
+            text-align:right;
+            margin-top:20px;
+        }
+
+        .footer{
+            text-align:center;
+            margin-top:40px;
+            border-top:1px solid #ddd;
+            padding-top:15px;
+            color:#777;
+        }
+
+    </style>
+
 </head>
+
 <body>
-<div class="navbar">
 
-    <div>
-        <a href="/user-dashboard">SmartCart</a>
-    </div>
-
-    <div>
-        <a href="/user/products">Products</a>
-        <a href="/user/my-orders">Orders</a>
-
-        <a href="/user/cart">
-            Cart ({{ session.get('cart')|length if session.get('cart') else 0 }})
-        </a>
-
-        <a href="/user-logout">Logout</a>
-    </div>
-
-</div>
-<nav>
-    <a href="/user-dashboard">Home</a>
-    <a href="/user/products">Products</a>
-    <a href="/user/my-orders">My Orders</a>
-    <a href="/user/cart">
-        Cart ({{ session.get('cart')|length if session.get('cart') else 0 }})
-    </a>
-    <a href="/user-logout">Logout</a>
-</nav>
- 
 <div class="invoice-box">
-	<div class="header">
-    	<h2>SmartCart Invoice</h2>
-    	<p><strong>Order ID:</strong> {{ order.order_id }}</p>
-        <p><strong>Date:</strong> {{ order.created_at }}</p>
-	</div>
- 
-	<h3>Customer Details</h3>
-	<p><strong>User ID:</strong> {{ order.user_id }}</p>
- 
-	<h3>Items</h3>
-	<table>
-    	<tr>
-        	<th>Product</th>
-        	<th>Qty</th>
-        	<th>Price (₹)</th>
-    	</tr>
- 
-    	{% for it in items %}
-    	<tr>
-        	<td>{{ it.product_name }}</td>
-        	<td>{{ it.quantity }}</td>
-        	<td>{{ it.price }}</td>
-    	</tr>
-    	{% endfor %}
-	</table>
- 
-	<h3 style="text-align:right;">Grand Total: ₹{{ order.amount }}</h3>
+
+    <!-- Header -->
+
+    <div class="header">
+
+        <h1>🛒 SmartCart</h1>
+
+        <p>
+            SmartCart E-Commerce Store
+        </p>
+
+        <h2>Invoice</h2>
+
+    </div>
+
+    <!-- Invoice Info -->
+
+    <table>
+
+        <tr>
+            <td>
+                <strong>Invoice No:</strong>
+                INV-{{ order.order_id }}
+            </td>
+
+            <td>
+                <strong>Order ID:</strong>
+                {{ order.order_id }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <strong>Payment ID:</strong>
+                {{ order.razorpay_payment_id }}
+            </td>
+
+            <td>
+                <strong>Date:</strong>
+                {{ order.created_at }}
+            </td>
+        </tr>
+
+    </table>
+
+    <!-- Customer Details -->
+
+    <div class="section-title">
+        <h3>Customer Details</h3>
+    </div>
+
+    <table>
+
+        <tr>
+            <td width="25%">
+                <strong>Name</strong>
+            </td>
+
+            <td>
+                {{ order.customer_name }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <strong>Mobile</strong>
+            </td>
+
+            <td>
+                {{ order.mobile }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <strong>Address</strong>
+            </td>
+
+            <td>
+                {{ order.address }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <strong>City</strong>
+            </td>
+
+            <td>
+                {{ order.city }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <strong>State</strong>
+            </td>
+
+            <td>
+                {{ order.state }}
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <strong>Pincode</strong>
+            </td>
+
+            <td>
+                {{ order.pincode }}
+            </td>
+        </tr>
+
+    </table>
+
+    <!-- Order Items -->
+
+    <div class="section-title">
+        <h3>Ordered Items</h3>
+    </div>
+
+    <table>
+
+        <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price (₹)</th>
+            <th>Total (₹)</th>
+        </tr>
+
+        {% for item in items %}
+
+        <tr>
+
+            <td>
+                {{ item.product_name }}
+            </td>
+
+            <td>
+                {{ item.quantity }}
+            </td>
+
+            <td>
+                ₹{{ item.price }}
+            </td>
+
+            <td>
+                ₹{{ item.price * item.quantity }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <!-- Total -->
+
+    <div class="total-box">
+
+        <h2>
+            Grand Total : ₹{{ order.amount }}
+        </h2>
+
+        <p>
+
+            <strong>Payment Status :</strong>
+
+            {% if order.payment_status %}
+                {{ order.payment_status|upper }}
+            {% else %}
+                PAID
+            {% endif %}
+
+        </p>
+
+    </div>
+
+    <!-- Footer -->
+
+    <div class="footer">
+
+        <h3>
+            Thank You For Shopping With SmartCart ❤️
+        </h3>
+
+        <p>
+            This is a computer-generated invoice and does not require a signature.
+        </p>
+
+    </div>
+
 </div>
- 
+
 </body>
-</html> 
+</html>

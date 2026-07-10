@@ -1,31 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>User Dashboard</title>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+       <title>User Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
 <div class="navbar">
 
-    <div>
-        <a href="/user-dashboard">🛒 SmartCart</a>
+    <div class="logo">
+        <a href="/user-dashboard">
+            🛒 SmartCart
+        </a>
     </div>
 
-    <div>
-        <a href="/user-dashboard">Home</a>
-        <a href="/user/products">Products</a>
-        <a href="/user/my-orders">Orders</a>
+    <div class="hamburger" onclick="toggleMenu()">
+        ☰
+    </div>
+
+    <div class="nav-menu" id="navMenu">
+
+        <a href="/user-dashboard">
+            Home
+        </a>
+
+        <a href="/user/products">
+            Products
+        </a>
+
+        <a href="/user/my-orders">
+            Orders
+        </a>
 
         <a href="/user/cart">
             Cart ({{ session.get('cart')|length if session.get('cart') else 0 }})
         </a>
 
-        <a href="/user-logout">Logout</a>
+        <a href="/user-logout">
+            Logout
+        </a>
+
     </div>
 
 </div>
-
 <div class="container">
 
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -93,5 +113,16 @@
 
 </div>
 
-</body>
+<script>
+
+function toggleMenu() {
+
+    let menu = document.getElementById("navMenu");
+
+    menu.classList.toggle("active");
+
+}
+
+</script>
+</body> 
 </html> 

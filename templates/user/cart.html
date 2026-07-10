@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Your Cart</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
@@ -8,12 +11,22 @@
 
 <div class="navbar">
 
-    <div>
-        <a href="/user-dashboard">SmartCart</a>
+    <div class="logo">
+        <a href="/user-dashboard">
+            🛒 SmartCart
+        </a>
     </div>
 
-    <div>
+    <div class="hamburger" onclick="toggleMenu()">
+        ☰
+    </div>
+
+    <div class="nav-menu" id="navMenu">
+
+        <a href="/user-dashboard">Home</a>
+
         <a href="/user/products">Products</a>
+
         <a href="/user/my-orders">Orders</a>
 
         <a href="/user/cart">
@@ -21,10 +34,10 @@
         </a>
 
         <a href="/user-logout">Logout</a>
+
     </div>
 
 </div>
-
 <div class="container">
 
     <h1>Your Shopping Cart</h1>
@@ -161,6 +174,8 @@
 
 </div>
 
+
+
 <script>
 
 function updateSelectedTotal() {
@@ -193,6 +208,14 @@ document.addEventListener("DOMContentLoaded", function(){
 
 });
 
+</script>
+
+
+<script>
+function toggleMenu(){
+    document.getElementById("navMenu")
+            .classList.toggle("active");
+}
 </script>
 
 </body>

@@ -2,15 +2,29 @@
 <html>
 <head>
     <title>SmartCart</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
-<div class="home-navbar">
+<!-- Navbar -->
 
-    <h2>🛒 SmartCart</h2>
+<<div class="home-navbar">
 
-    <div>
+    <div class="home-logo">
+    🛒 SmartCart
+</div>
+
+    <div class="menu-toggle"
+         onclick="toggleMenu()">
+        ☰
+    </div>
+
+    <div class="home-nav-links"
+         id="homeNavLinks">
+
         <a href="/user-login" class="nav-btn">
             User Login
         </a>
@@ -18,9 +32,11 @@
         <a href="/admin-login" class="nav-btn admin-btn">
             Admin Login
         </a>
+
     </div>
 
 </div>
+<!-- Hero Section -->
 
 <section class="hero">
 
@@ -32,7 +48,7 @@
 
         <p>
             Shop Smart. Shop Easy. Discover amazing products,
-            secure payments and seamless shopping experience.
+            secure payments and a seamless shopping experience.
         </p>
 
         <div class="hero-buttons">
@@ -52,6 +68,8 @@
     </div>
 
 </section>
+
+<!-- Features -->
 
 <section class="features">
 
@@ -87,9 +105,13 @@
 
 </section>
 
+<!-- CTA -->
+
 <section class="cta-section">
 
-    <h2>Ready To Explore SmartCart?</h2>
+    <h2>
+        Ready To Explore SmartCart?
+    </h2>
 
     <p>
         Login now and start your shopping journey.
@@ -104,6 +126,8 @@
 
 </section>
 
+<!-- Footer -->
+
 <footer class="home-footer">
 
     <p>
@@ -111,6 +135,20 @@
     </p>
 
 </footer>
+
+<!-- Mobile Menu Script -->
+
+<script>
+
+function toggleMenu(){
+
+    document
+        .getElementById("homeNavLinks")
+        .classList.toggle("show");
+
+}
+
+</script>
 
 </body>
 </html>

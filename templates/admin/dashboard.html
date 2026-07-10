@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
@@ -8,19 +11,41 @@
 
 <div class="navbar">
 
-    <div>
-        <a href="/admin-dashboard">🛒 SmartCart Admin</a>
+    <div class="logo">
+        <a href="/admin-dashboard">
+            🛒 SmartCart Admin
+        </a>
     </div>
 
-    <div>
-        <a href="/admin/item-list">Products</a>
-        <a href="/admin/add-item">Add Product</a>
-        <a href="/admin/orders">Orders</a>
-        <a href="/admin-logout">Logout</a>
+    <div class="hamburger" onclick="toggleMenu()">
+        ☰
+    </div>
+
+    <div class="nav-menu" id="navMenu">
+
+        <a href="/admin-dashboard">
+            Dashboard
+        </a>
+
+        <a href="/admin/item-list">
+            Products
+        </a>
+
+        <a href="/admin/add-item">
+            Add Product
+        </a>
+
+        <a href="/admin/orders">
+            Orders
+        </a>
+
+        <a href="/admin-logout">
+            Logout
+        </a>
+
     </div>
 
 </div>
-
 <div class="container">
 
     <h1>Welcome Admin, {{ admin_name }} 👋</h1>
@@ -252,6 +277,12 @@
     </div>
 
 </div>
+<script>
+function toggleMenu(){
+    document.getElementById("navMenu")
+            .classList.toggle("active");
+}
+</script>
 
 </body>
 </html>
