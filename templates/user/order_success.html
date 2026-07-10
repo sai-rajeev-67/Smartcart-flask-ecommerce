@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Successful</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+
+    <div>
+        <a href="/user-dashboard">🛒 SmartCart</a>
+    </div>
+
+    <div>
+        <a href="/user/products">Products</a>
+        <a href="/user/my-orders">Orders</a>
+
+        <a href="/user/cart">
+            Cart ({{ session.get('cart')|length if session.get('cart') else 0 }})
+        </a>
+
+        <a href="/user-logout">Logout</a>
+    </div>
+
+</div>
+
+<div class="container">
+
+    <div class="success-card">
+
+        <h1>🎉 Order Placed Successfully!</h1>
+
+        <p style="margin-top:15px;">
+            Thank you for shopping with SmartCart.
+        </p>
+
+        <br>
+
+        <p>
+            <strong>Order ID:</strong><br>
+            {{ order.order_id }}
+        </p>
+
+        <br>
+
+        <p>
+            <strong>Payment ID:</strong><br>
+            {{ order.razorpay_payment_id }}
+        </p>
+
+        <br>
+
+        <p>
+            <strong>Amount Paid:</strong><br>
+            ₹{{ order.amount }}
+        </p>
+
+        <br>
+
+        <p>
+            <strong>Payment Status:</strong><br>
+            {{ order.payment_status }}
+        </p>
+
+        <hr style="margin:30px 0;">
+
+        <h3>📍 Delivery Address</h3>
+
+        <br>
+
+        <p><strong>Name:</strong> {{ order.customer_name }}</p>
+
+        <p><strong>Mobile:</strong> {{ order.mobile }}</p>
+
+        <p><strong>Address:</strong> {{ order.address }}</p>
+
+        <p>
+            {{ order.city }},
+            {{ order.state }} -
+            {{ order.pincode }}
+        </p>
+
+        <hr style="margin:30px 0;">
+
+        <h3>🛒 Ordered Items</h3>
+
+        <br>
+
+        <table>
+
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+
+            {% for item in items %}
+
+            <tr>
+
+                <td>{{ item.product_name }}</td>
+
+                <td>{{ item.quantity }}</td>
+
+                <td>₹{{ item.price }}</td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        <br><br>
+
+        <a href="/user/download-invoice/{{ order.order_id }}"
+           class="btn btn-success">
+            Download Invoice
+        </a>
+
+        <a href="/user/my-orders"
+           class="btn">
+            View My Orders
+        </a>
+
+        <a href="/user/products"
+           class="btn">
+            Continue Shopping
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

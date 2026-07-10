@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Registration</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="register-wrapper">
+
+    <div class="register-card">
+
+        <h1>🛒 SmartCart</h1>
+
+        <h2>Admin Registration</h2>
+
+        <p>
+            Register as a SmartCart Administrator.
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <p class="{{ category }}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" action="/admin-signup">
+
+            <label>Admin Name</label>
+
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter admin name"
+                required
+            >
+
+            <label>Email Address</label>
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter admin email"
+                required
+            >
+
+            <button
+                type="submit"
+                class="btn btn-success register-btn">
+                Send OTP
+            </button>
+
+        </form>
+
+        <div class="register-footer">
+
+            <p>
+                Already registered?
+            </p>
+
+            <a href="/admin-login">
+                Admin Login
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

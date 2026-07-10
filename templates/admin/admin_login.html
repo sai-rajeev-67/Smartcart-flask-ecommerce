@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+
+    <div>
+        <a href="/">🛒 SmartCart Admin</a>
+    </div>
+
+</div>
+
+<div class="container">
+
+    <div class="admin-form-card">
+
+        <h1>🔐 Admin Login</h1>
+
+        <p style="text-align:center;color:#666;margin-bottom:25px;">
+            Access the SmartCart Administration Dashboard
+        </p>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category, message in messages %}
+            <p class="{{ category }}">{{ message }}</p>
+          {% endfor %}
+        {% endwith %}
+
+        <form method="POST" action="/admin-login">
+
+            <label>Email Address</label>
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter admin email"
+                required
+            >
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter password"
+                required
+            >
+
+            <button type="submit" class="btn btn-success">
+                Login To Dashboard
+            </button>
+
+        </form>
+
+        <br>
+
+        <div style="text-align:center;">
+
+            <a href="/admin-signup" class="btn">
+                Create Admin Account
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify OTP</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="register-wrapper">
+
+    <div class="register-card">
+
+        <h1>🔐 OTP Verification</h1>
+
+        <h2>Complete Registration</h2>
+
+        <p>
+            Enter the OTP sent to your email and create your password.
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+
+                <p class="{{ category }}">
+                    {{ message }}
+                </p>
+
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" action="/verify-otp">
+
+            <label>Enter OTP</label>
+
+            <input
+                type="text"
+                name="otp"
+                placeholder="Enter 6-digit OTP"
+                required
+            >
+
+            <label>Create Password</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Create a strong password"
+                required
+            >
+
+            <button
+                type="submit"
+                class="btn btn-success register-btn">
+                Verify & Register
+            </button>
+
+        </form>
+
+        <div class="register-footer">
+
+            <p>
+                Didn't receive the OTP?
+            </p>
+
+            <a href="/admin-signup">
+                Register Again
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

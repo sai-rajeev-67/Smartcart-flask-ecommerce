@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="admin-form-card">
+
+        <h1>Delivery Address</h1>
+
+        <form method="POST" action="/user/checkout">
+
+            <label>Full Name</label>
+            <input type="text" name="name" required>
+
+            <label>Mobile Number</label>
+            <input type="text" name="mobile" required>
+
+            <label>Address</label>
+            <textarea name="address" required></textarea>
+
+            <label>City</label>
+            <input type="text" name="city" required>
+
+            <label>State</label>
+            <input type="text" name="state" required>
+
+            <label>Pincode</label>
+            <input type="text" name="pincode" required>
+
+            <button type="submit" class="btn btn-success">
+                Continue To Payment
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html> 

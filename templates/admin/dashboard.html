@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+
+    <div>
+        <a href="/admin-dashboard">🛒 SmartCart Admin</a>
+    </div>
+
+    <div>
+        <a href="/admin/item-list">Products</a>
+        <a href="/admin/add-item">Add Product</a>
+        <a href="/admin/orders">Orders</a>
+        <a href="/admin-logout">Logout</a>
+    </div>
+
+</div>
+
+<div class="container">
+
+    <h1>Welcome Admin, {{ admin_name }} 👋</h1>
+
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+
+        <h2>📊 SmartCart Control Center</h2>
+
+        <p>
+            Monitor products, users, orders and revenue from one place.
+        </p>
+
+    </div>
+
+    <!-- Statistics -->
+    <div class="stats-grid">
+
+        <div class="stats-card products-card">
+            <h2>{{ total_products }}</h2>
+            <p>📦 Products</p>
+        </div>
+
+        <div class="stats-card users-card">
+            <h2>{{ total_users }}</h2>
+            <p>👤 Users</p>
+        </div>
+
+        <div class="stats-card orders-card">
+            <h2>{{ total_orders }}</h2>
+            <p>🛒 Orders</p>
+        </div>
+
+        <div class="stats-card revenue-card">
+            <h2>₹{{ revenue }}</h2>
+            <p>💰 Revenue</p>
+        </div>
+
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+
+        <h2>⚡ Quick Actions</h2>
+
+        <div class="action-buttons">
+
+            <a href="/admin/add-item" class="btn btn-success">
+                ➕ Add Product
+            </a>
+
+            <a href="/admin/item-list" class="btn">
+                📦 Products
+            </a>
+
+            <a href="/admin/orders" class="btn btn-warning">
+                🛒 Orders
+            </a>
+
+            <a href="/admin-logout" class="btn btn-danger">
+                🚪 Logout
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Management Modules -->
+    <h2 style="margin-bottom:20px;">
+        🛠 Management Modules
+    </h2>
+
+    <div class="dashboard-grid">
+
+        <div class="dashboard-card">
+
+            <h3>📦 Product List</h3>
+
+            <p>
+                View all products available in the SmartCart store.
+            </p>
+
+            <br>
+
+            <a href="/admin/item-list" class="btn">
+                Open Products
+            </a>
+
+        </div>
+
+        <div class="dashboard-card">
+
+            <h3>➕ Add Product</h3>
+
+            <p>
+                Add new products with images, descriptions and pricing.
+            </p>
+
+            <br>
+
+            <a href="/admin/add-item" class="btn btn-success">
+                Add Product
+            </a>
+
+        </div>
+
+        <div class="dashboard-card">
+
+            <h3>✏️ Update Products</h3>
+
+            <p>
+                Modify product details, pricing and product images.
+            </p>
+
+            <br>
+
+            <a href="/admin/item-list" class="btn">
+                Manage Products
+            </a>
+
+        </div>
+
+        <div class="dashboard-card">
+
+            <h3>🗑️ Delete Products</h3>
+
+            <p>
+                Remove unwanted or discontinued products from the store.
+            </p>
+
+            <br>
+
+            <a href="/admin/item-list" class="btn btn-danger">
+                Delete Products
+            </a>
+
+        </div>
+
+        <div class="dashboard-card">
+
+            <h3>📋 Customer Orders</h3>
+
+            <p>
+                View customer orders, payment details and delivery addresses.
+            </p>
+
+            <br>
+
+            <a href="/admin/orders" class="btn btn-success">
+                View Orders
+            </a>
+
+        </div>
+
+    </div>
+
+    <br><br>
+
+    <!-- Store Overview -->
+    <div class="recent-section">
+
+        <h2>📈 Store Overview</h2>
+
+        <div class="overview-card">
+
+            <p>
+                Total Products Available:
+                <strong>{{ total_products }}</strong>
+            </p>
+
+            <p>
+                Registered Users:
+                <strong>{{ total_users }}</strong>
+            </p>
+
+            <p>
+                Orders Placed:
+                <strong>{{ total_orders }}</strong>
+            </p>
+
+            <p>
+                Total Revenue:
+                <strong>₹{{ revenue }}</strong>
+            </p>
+
+        </div>
+
+    </div>
+
+    <br><br>
+
+    <!-- Recent Orders -->
+    <div class="recent-section">
+
+        <h2>🕒 Recent Orders</h2>
+
+        <div class="overview-card">
+
+            <table>
+
+                <tr>
+                    <th>Order ID</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                </tr>
+
+                {% for order in recent_orders %}
+
+                <tr>
+
+                    <td>#{{ order.order_id }}</td>
+
+                    <td>
+                        ₹{{ order.amount }}
+                    </td>
+
+                    <td>
+                        {{ order.payment_status }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

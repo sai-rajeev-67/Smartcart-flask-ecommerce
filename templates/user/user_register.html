@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Registration</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="register-wrapper">
+
+    <div class="register-card">
+
+        <h1>🛒 SmartCart</h1>
+
+        <h2>Create Account</h2>
+
+        <p>
+            Join SmartCart and start shopping today.
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+
+                <p class="{{ category }}">
+                    {{ message }}
+                </p>
+
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" action="/user-register">
+
+            <label>Full Name</label>
+
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter your full name"
+                required
+            >
+
+            <label>Email Address</label>
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter your email address"
+                required
+            >
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Create a password"
+                required
+            >
+
+            <button
+                type="submit"
+                class="btn btn-success register-btn">
+                Create Account
+            </button>
+
+        </form>
+
+        <div class="register-footer">
+
+            <p>
+                Already have an account?
+            </p>
+
+            <a href="/user-login">
+                Login Here
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

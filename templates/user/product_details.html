@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ product.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+
+    <div>
+        <a href="/user-dashboard">🛒 SmartCart</a>
+    </div>
+
+    <div>
+        <a href="/user-dashboard">Home</a>
+        <a href="/user/products">Products</a>
+        <a href="/user/my-orders">Orders</a>
+
+        <a href="/user/cart">
+            Cart ({{ session.get('cart')|length if session.get('cart') else 0 }})
+        </a>
+
+        <a href="/user-logout">Logout</a>
+    </div>
+
+</div>
+
+<div class="container">
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <p class="{{ category }}">{{ message }}</p>
+      {% endfor %}
+    {% endwith %}
+
+    <div class="product-details-card">
+
+        <!-- Product Image -->
+        <div class="product-image-section">
+
+            <img
+                src="/static/uploads/product_images/{{ product.image }}"
+                alt="{{ product.name }}"
+                class="product-detail-image"
+            >
+
+        </div>
+
+        <!-- Product Info -->
+        <div class="product-info-section">
+
+            <h1>{{ product.name }}</h1>
+
+            <p class="product-category">
+                Category : {{ product.category }}
+            </p>
+
+            <p style="color:green;font-weight:bold;font-size:18px;">
+                ✔ In Stock
+            </p>
+
+            <br>
+
+            <p class="product-description">
+                {{ product.description }}
+            </p>
+
+            <br>
+
+            <h2 class="product-price">
+                ₹{{ product.price }}
+            </h2>
+
+            <p style="color:#666;">
+                Inclusive of all taxes
+            </p>
+
+            <br><br>
+
+            <a
+                href="/user/add-to-cart/{{ product.product_id }}"
+                class="btn btn-success"
+            >
+                🛒 Add To Cart
+            </a>
+
+            <a
+                href="/user/products"
+                class="btn"
+            >
+                ← Back To Products
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

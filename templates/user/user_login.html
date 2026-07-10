@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+
+    <div>
+        <a href="/">🛒 SmartCart</a>
+    </div>
+
+    <div>
+        <a href="/user-register">Register</a>
+    </div>
+
+</div>
+
+<div class="container">
+
+    <div class="admin-form-card">
+
+        <h1>User Login</h1>
+
+        <p style="text-align:center;color:#666;margin-bottom:20px;">
+            Login to access your cart, orders and shopping dashboard.
+        </p>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+                <p class="{{ category }}">{{ message }}</p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/user-login">
+
+            <label>Email Address</label>
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+            >
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+            >
+
+            <button type="submit" class="btn btn-success">
+                Login
+            </button>
+
+        </form>
+
+        <br>
+
+        <div style="text-align:center;">
+
+            <p>
+                Don't have an account?
+            </p>
+
+            <br>
+
+            <a href="/user-register" class="btn">
+                Create Account
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

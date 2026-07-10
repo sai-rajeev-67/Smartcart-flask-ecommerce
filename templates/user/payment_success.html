@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Confirmed</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+
+    <div>
+        <a href="/user-dashboard">🛒 SmartCart</a>
+    </div>
+
+    <div>
+        <a href="/user/products">Products</a>
+        <a href="/user/my-orders">Orders</a>
+
+        <a href="/user/cart">
+            Cart ({{ session.get('cart')|length if session.get('cart') else 0 }})
+        </a>
+
+        <a href="/user-logout">Logout</a>
+    </div>
+
+</div>
+
+<div class="container">
+
+    <div class="success-card">
+
+        <h1>✅ Payment Successful!</h1>
+
+        <p>
+            Your order has been placed successfully.
+        </p>
+
+        <br>
+
+        <p>
+            <strong>Payment ID:</strong>
+            {{ payment_id }}
+        </p>
+
+        <p>
+            <strong>Order ID:</strong>
+            {{ order_id }}
+        </p>
+
+        <br>
+
+        <a href="/user/my-orders"
+           class="btn btn-success">
+            View My Orders
+        </a>
+
+        <a href="/user/products"
+           class="btn">
+            Continue Shopping
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

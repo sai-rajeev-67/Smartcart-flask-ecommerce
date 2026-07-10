@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+
+    <div>
+        <a href="/user-dashboard">SmartCart</a>
+    </div>
+
+    <div>
+        <a href="/user/products">Products</a>
+        <a href="/user/my-orders">Orders</a>
+
+        <a href="/user/cart">
+            Cart ({{ session.get('cart')|length if session.get('cart') else 0 }})
+        </a>
+
+        <a href="/user-logout">Logout</a>
+    </div>
+
+</div>
+
+<div class="container">
+
+    <h1>Your Shopping Cart</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <p class="{{ category }}">{{ message }}</p>
+      {% endfor %}
+    {% endwith %}
+
+    {% if not cart %}
+
+        <div class="empty-cart">
+
+            <h2>Your Cart is Empty 🛒</h2>
+
+            <br>
+
+            <a href="/user/products" class="btn">
+                Shop Now
+            </a>
+
+        </div>
+
+    {% else %}
+
+    <form method="POST" action="/user/checkout-selected">
+
+    <table>
+
+        <tr>
+            <th>Select</th>
+            <th>Image</th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+
+        {% for pid, item in cart.items() %}
+
+        <tr>
+
+            <td>
+                <input
+                    type="checkbox"
+                    class="product-checkbox"
+                    data-price="{{ item.price * item.quantity }}"
+                    name="selected_items"
+                    value="{{ pid }}"
+                    checked
+                >
+            </td>
+
+            <td>
+                <img
+                    src="/static/uploads/product_images/{{ item.image }}"
+                    class="cart-image"
+                >
+            </td>
+
+            <td>{{ item.name }}</td>
+
+            <td>₹{{ item.price }}</td>
+
+            <td>
+
+                <a href="/user/cart/decrease/{{ pid }}"
+                   class="qty-btn">
+                    -
+                </a>
+
+                <span class="qty-number">
+                    {{ item.quantity }}
+                </span>
+
+                <a href="/user/cart/increase/{{ pid }}"
+                   class="qty-btn">
+                    +
+                </a>
+
+            </td>
+
+            <td>
+                ₹{{ item.price * item.quantity }}
+            </td>
+
+            <td>
+
+                <a href="/user/cart/remove/{{ pid }}"
+                   class="btn btn-danger">
+                    Remove
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <br>
+
+    <div class="cart-summary">
+
+        <h2>
+            Cart Total : ₹{{ grand_total }}
+        </h2>
+
+        <h3 style="margin-top:15px;">
+            Selected Total :
+            ₹<span id="selected-total">{{ grand_total }}</span>
+        </h3>
+
+        <br>
+
+        <button type="submit"
+                class="btn btn-success">
+            Proceed To Checkout
+        </button>
+
+        <a href="/user/products"
+           class="btn">
+            Continue Shopping
+        </a>
+
+    </div>
+
+    </form>
+
+    {% endif %}
+
+</div>
+
+<script>
+
+function updateSelectedTotal() {
+
+    let total = 0;
+
+    document.querySelectorAll(".product-checkbox").forEach(function(box){
+
+        if(box.checked){
+
+            total += parseFloat(box.dataset.price) || 0;
+
+        }
+
+    });
+
+    document.getElementById("selected-total").innerText =
+        total.toFixed(2);
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    document.querySelectorAll(".product-checkbox").forEach(function(box){
+
+        box.addEventListener("change", updateSelectedTotal);
+
+    });
+
+    updateSelectedTotal();
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ product.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+
+    <div>
+        <a href="/admin-dashboard">SmartCart Admin</a>
+    </div>
+
+    <div>
+        <a href="/admin-dashboard">Dashboard</a>
+        <a href="/admin/item-list">Products</a>
+        <a href="/admin/add-item">Add Product</a>
+        <a href="/admin-logout">Logout</a>
+    </div>
+
+</div>
+
+<div class="container">
+
+    <div class="product-details-card">
+
+        <div class="product-image-section">
+
+            <img
+                src="/static/uploads/product_images/{{ product.image }}"
+                class="product-detail-image"
+            >
+
+        </div>
+
+        <div class="product-info-section">
+
+            <h1>{{ product.name }}</h1>
+
+            <p class="product-category">
+                Category : {{ product.category }}
+            </p>
+
+            <br>
+
+            <p class="product-description">
+                {{ product.description }}
+            </p>
+
+            <br>
+
+            <h2 class="product-price">
+                ₹{{ product.price }}
+            </h2>
+
+            <br><br>
+
+            <a href="/admin/item-list"
+               class="btn">
+                Back To Products
+            </a>
+
+            <a href="/admin/update-item/{{ product.product_id }}"
+               class="btn btn-success">
+                Update Product
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
