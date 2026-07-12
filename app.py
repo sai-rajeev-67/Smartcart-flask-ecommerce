@@ -27,17 +27,10 @@ razorpay_client = razorpay.Client(
 
 
 # ---------------- EMAIL CONFIGURATION ----------------
-app.config['MAIL_SERVER'] = config.MAIL_SERVER
-app.config['MAIL_PORT'] = config.MAIL_PORT
-app.config['MAIL_USE_TLS'] = config.MAIL_USE_TLS
-app.config['MAIL_USERNAME'] = config.MAIL_USERNAME
-app.config['MAIL_PASSWORD'] = config.MAIL_PASSWORD
-app.config['MAIL_TIMEOUT'] = 10
-app.config['MAIL_DEBUG'] = True
 
 
 
-mail = Mail(app)
+
 
 
 # ---------------- DB CONNECTION FUNCTION --------------
@@ -92,14 +85,16 @@ def admin_signup():
 
     # 4️⃣ Send OTP Email
     resend.Emails.send({
-    "from": "onboarding@resend.dev",
+    "from": "SmartCart <noreply@smkt.com>",
     "to": email,
-    "subject": "SmartCart Admin OTP",
+    "subject": "SmartCart Admin OTP Verification",
     "html": f"""
-        <h2>SmartCart OTP Verification</h2>
+    <div style="font-family: Arial, sans-serif;">
+        <h2>🛒 SmartCart OTP Verification</h2>
         <p>Your OTP is:</p>
-        <h1>{otp}</h1>
-        <p>Valid for one session only.</p>
+        <h1 style="color:#2563eb;">{otp}</h1>
+        <p>This OTP is valid for this registration session.</p>
+    </div>
     """
 })
 
