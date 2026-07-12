@@ -9,7 +9,6 @@ import config
 import razorpay
 import traceback
 import xhtml2pdf
-import resend
 from flask import make_response, render_template
 from utils.pdf_generator import generate_pdf
 
@@ -19,18 +18,24 @@ app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
 
 
-resend.api_key = config.RESEND_API_KEY
-
 razorpay_client = razorpay.Client(
     auth=(config.RAZORPAY_KEY_ID, config.RAZORPAY_KEY_SECRET)
 )
 
 
 # ---------------- EMAIL CONFIGURATION ----------------
+app.config['MAIL_SERVER'] = config.MAIL_SERVER
+app.config['MAIL_PORT'] = config.MAIL_PORT
+app.config['MAIL_USE_TLS'] = config.MAIL_USE_TLS
+app.config['MAIL_USERNAME'] = config.MAIL_USERNAME
+app.config['MAIL_PASSWORD'] = config.MAIL_PASSWORD
+app.config['MAIL_TIMEOUT'] = 10
+app.config['MAIL_DEBUG'] = True
 
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
 
-
-
+mail = Mail(app)
 
 
 # ---------------- DB CONNECTION FUNCTION --------------
@@ -84,50 +89,48 @@ def admin_signup():
     session['otp'] = otp
 
     # 4️⃣ Send OTP Email
-    resend.Emails.send({
-    "from": "SmartCart <noreply@smkt.com>",
-    "to": email,
-    "subject": "SmartCart Admin OTP Verification",
-    "html": f"""
-    <div style="font-family: Arial, sans-serif;">
-        <h2>🛒 SmartCart OTP Verification</h2>
-        <p>Your OTP is:</p>
-        <h1 style="color:#2563eb;">{otp}</h1>
-        <p>This OTP is valid for this registration session.</p>
-    </div>
-    """
-})
-
-
-
-@app.route('/resend-test')
-def resend_test():
-
+    message = Message(
+        subject="SmartCart Admin OTP",
+        sender=config.MAIL_USERNAME,
+        recipients=[email]
+    )
+    message.body = f"Your OTP for SmartCart Admin Registration is: {otp}"
     try:
-
-        resend.Emails.send({
-            "from": "onboarding@resend.dev",
-            "to": "YOUR_EMAIL@gmail.com",
-            "subject": "SmartCart Test",
-            "html": "<h1>Resend Working ✅</h1>"
-        })
-
-        return "Email Sent"
-
+        mail.send(message)
+        flash("OTP sent to your email!", "success")
+        return redirect('/verify-otp')
     except Exception as e:
+        print("MAIL ERROR:", str(e))
+        flash(f"Mail Error: {str(e)}", "danger")
+    return redirect('/admin-signup')
 
-        return str(e)
+
+
+@app.route('/mail-test')
+def mail_test():
+    return f"""
+    MAIL_USERNAME={app.config.get('MAIL_USERNAME')}<br>
+    MAIL_SERVER={app.config.get('MAIL_SERVER')}<br>
+    MAIL_PORT={app.config.get('MAIL_PORT')}
+    """
 
 
 
 @app.route('/smtp-test')
 def smtp_test():
-    import socket
+    import smtplib
 
     try:
-        s = socket.create_connection(("smtp.gmail.com", 587), timeout=10)
-        s.close()
-        return "SMTP Reachable"
+        server = smtplib.SMTP("smtp.gmail.com", 587, timeout=10)
+        server.starttls()
+        server.login(
+            app.config['MAIL_USERNAME'],
+            app.config['MAIL_PASSWORD']
+        )
+        server.quit()
+
+        return "SMTP Login Success ✅"
+
     except Exception as e:
         return str(e)
 # ---------------------------------------------------------
