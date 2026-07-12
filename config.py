@@ -24,6 +24,7 @@ MAIL_USE_TLS = True
 
 MAIL_USERNAME = os.getenv("MAIL_USERNAME")
 MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
+BREVO_API_KEY = os.getenv("BREVO_API_KEY")
 
 
 # Razorpay

@@ -12,6 +12,9 @@ import xhtml2pdf
 from flask import make_response, render_template
 from utils.pdf_generator import generate_pdf
 
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+
 
 
 app = Flask(__name__)
@@ -49,6 +52,31 @@ def get_db_connection():
         connection_timeout=10
     )
 
+
+def send_otp_email(receiver_email, otp):
+
+    configuration = sib_api_v3_sdk.Configuration()
+    configuration.api_key['api-key'] = config.BREVO_API_KEY
+
+    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+        sib_api_v3_sdk.ApiClient(configuration)
+    )
+
+    email = sib_api_v3_sdk.SendSmtpEmail(
+        to=[{"email": receiver_email}],
+        sender={
+            "name": "SmartCart",
+            "email": "medesettysai@gmail.com"   # your verified email
+        },
+        subject="SmartCart Admin OTP Verification",
+        html_content=f"""
+        <h2>🛒 SmartCart OTP Verification</h2>
+        <p>Your OTP is:</p>
+        <h1>{otp}</h1>
+        """
+    )
+
+    api_instance.send_transac_email(email)
 
 @app.route('/')
 def home():
@@ -91,29 +119,9 @@ def admin_signup():
 
     otp = random.randint(100000, 999999)
     session['otp'] = otp
-
     try:
-
-        message = Message(
-            subject="SmartCart Admin OTP",
-            sender=app.config['MAIL_USERNAME'],
-            recipients=[email]
-        )
-
-        message.body = f"""
-Welcome to SmartCart Admin Registration
-
-Your OTP is:
-
-{otp}
-
-Do not share this OTP with anyone.
-"""
-
-        mail.send(message)
-
+        send_otp_email(email, otp)
         flash("OTP sent successfully!", "success")
-
         return redirect('/verify-otp')
 
     except Exception as e:
@@ -131,46 +139,27 @@ def mail_test():
 
     try:
 
-        msg = Message(
-            subject="SmartCart Mail Test",
-            sender=app.config['MAIL_USERNAME'],
-            recipients=["medesettysai@gmail.com"]
+        send_otp_email(
+            "medesettysai@gmail.com",
+            "123456"
         )
 
-        msg.body = "Brevo SMTP is working successfully."
-
-        mail.send(msg)
-
-        return "Mail Sent Successfully ✅"
+        return "Brevo API Working ✅"
 
     except Exception as e:
 
-        return f"MAIL ERROR: {str(e)}"
-
-
-@app.route('/smtp-test')
-def smtp_test():
-
-    import smtplib
+        return str(e)
+@app.route('/brevo-test')
+def brevo_test():
 
     try:
 
-        server = smtplib.SMTP(
-            "smtp-relay.brevo.com",
-            587,
-            timeout=10
+        send_otp_email(
+            "medesettysai@gmail.com",
+            "123456"
         )
 
-        server.starttls()
-
-        server.login(
-            app.config['MAIL_USERNAME'],
-            app.config['MAIL_PASSWORD']
-        )
-
-        server.quit()
-
-        return "Brevo SMTP Login Success ✅"
+        return "Brevo API Working ✅"
 
     except Exception as e:
 
