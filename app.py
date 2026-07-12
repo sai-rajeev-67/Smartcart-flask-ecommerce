@@ -105,17 +105,28 @@ def admin_signup():
 
 @app.route('/mail-test')
 def mail_test():
+
+    import traceback
+
     try:
         msg = Message(
-            "Test",
+            subject="Test Mail",
             sender=app.config['MAIL_USERNAME'],
             recipients=[app.config['MAIL_USERNAME']]
         )
+
         msg.body = "Hello from Render"
+
         mail.send(msg)
-        return "Mail sent successfully"
+
+        return "Mail Sent Successfully"
+
     except Exception as e:
-        return f"Mail Error: {e}"
+
+        print("MAIL ERROR:")
+        print(traceback.format_exc())
+
+        return f"<pre>{traceback.format_exc()}</pre>"
 # ---------------------------------------------------------
 # ROUTE 2: DISPLAY OTP PAGE
 # ---------------------------------------------------------
