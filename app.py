@@ -9,6 +9,7 @@ import config
 import razorpay
 import traceback
 import xhtml2pdf
+import resend
 from flask import make_response, render_template
 from utils.pdf_generator import generate_pdf
 
@@ -17,6 +18,8 @@ from utils.pdf_generator import generate_pdf
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
 
+
+resend.api_key = config.RESEND_API_KEY
 
 razorpay_client = razorpay.Client(
     auth=(config.RAZORPAY_KEY_ID, config.RAZORPAY_KEY_SECRET)
@@ -32,8 +35,7 @@ app.config['MAIL_PASSWORD'] = config.MAIL_PASSWORD
 app.config['MAIL_TIMEOUT'] = 10
 app.config['MAIL_DEBUG'] = True
 
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
+
 
 mail = Mail(app)
 
@@ -89,30 +91,37 @@ def admin_signup():
     session['otp'] = otp
 
     # 4️⃣ Send OTP Email
-    message = Message(
-        subject="SmartCart Admin OTP",
-        sender=config.MAIL_USERNAME,
-        recipients=[email]
-    )
-    message.body = f"Your OTP for SmartCart Admin Registration is: {otp}"
-    try:
-        mail.send(message)
-        flash("OTP sent to your email!", "success")
-        return redirect('/verify-otp')
-    except Exception as e:
-        print("MAIL ERROR:", str(e))
-        flash(f"Mail Error: {str(e)}", "danger")
-    return redirect('/admin-signup')
-
-
-
-@app.route('/mail-test')
-def mail_test():
-    return f"""
-    MAIL_USERNAME={app.config.get('MAIL_USERNAME')}<br>
-    MAIL_SERVER={app.config.get('MAIL_SERVER')}<br>
-    MAIL_PORT={app.config.get('MAIL_PORT')}
+    resend.Emails.send({
+    "from": "onboarding@resend.dev",
+    "to": email,
+    "subject": "SmartCart Admin OTP",
+    "html": f"""
+        <h2>SmartCart OTP Verification</h2>
+        <p>Your OTP is:</p>
+        <h1>{otp}</h1>
+        <p>Valid for one session only.</p>
     """
+})
+
+
+
+@app.route('/resend-test')
+def resend_test():
+
+    try:
+
+        resend.Emails.send({
+            "from": "onboarding@resend.dev",
+            "to": "YOUR_EMAIL@gmail.com",
+            "subject": "SmartCart Test",
+            "html": "<h1>Resend Working ✅</h1>"
+        })
+
+        return "Email Sent"
+
+    except Exception as e:
+
+        return str(e)
 
 
 

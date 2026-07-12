@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 
+
 import os
 
 
@@ -27,6 +28,9 @@ MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
 # Razorpay
 RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
 RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
+
+
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 
 
 
