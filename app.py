@@ -32,6 +32,9 @@ app.config['MAIL_PASSWORD'] = config.MAIL_PASSWORD
 app.config['MAIL_TIMEOUT'] = 10
 app.config['MAIL_DEBUG'] = True
 
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+
 mail = Mail(app)
 
 
@@ -105,28 +108,24 @@ def admin_signup():
 
 @app.route('/mail-test')
 def mail_test():
+    return f"""
+    MAIL_USERNAME={app.config.get('MAIL_USERNAME')}<br>
+    MAIL_SERVER={app.config.get('MAIL_SERVER')}<br>
+    MAIL_PORT={app.config.get('MAIL_PORT')}
+    """
 
-    import traceback
+
+
+@app.route('/smtp-test')
+def smtp_test():
+    import socket
 
     try:
-        msg = Message(
-            subject="Test Mail",
-            sender=app.config['MAIL_USERNAME'],
-            recipients=[app.config['MAIL_USERNAME']]
-        )
-
-        msg.body = "Hello from Render"
-
-        mail.send(msg)
-
-        return "Mail Sent Successfully"
-
+        s = socket.create_connection(("smtp.gmail.com", 587), timeout=10)
+        s.close()
+        return "SMTP Reachable"
     except Exception as e:
-
-        print("MAIL ERROR:")
-        print(traceback.format_exc())
-
-        return f"<pre>{traceback.format_exc()}</pre>"
+        return str(e)
 # ---------------------------------------------------------
 # ROUTE 2: DISPLAY OTP PAGE
 # ---------------------------------------------------------
