@@ -94,14 +94,12 @@ def admin_signup():
     message.body = f"Your OTP for SmartCart Admin Registration is: {otp}"
     try:
         mail.send(message)
+        flash("OTP sent to your email!", "success")
+        return redirect('/verify-otp')
     except Exception as e:
         print("MAIL ERROR:", str(e))
         flash(f"Mail Error: {str(e)}", "danger")
-    return redirect("/admin-signup")
-
-    flash("OTP sent to your email!", "success")
-    return redirect('/verify-otp')
-
+    return redirect('/admin-signup')
 
 
 
