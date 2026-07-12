@@ -60,78 +60,120 @@ def home():
 @app.route('/admin-signup', methods=['GET', 'POST'])
 def admin_signup():
 
-    # Show form
     if request.method == "GET":
         return render_template("admin/admin_signup.html")
 
-    # POST → Process signup
     name = request.form['name']
     email = request.form['email']
 
-    # 1️⃣ Check if admin email already exists
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT admin_id FROM admin WHERE email=%s", (email,))
+
+    cursor.execute(
+        "SELECT admin_id FROM admin WHERE email=%s",
+        (email,)
+    )
+
     existing_admin = cursor.fetchone()
+
     cursor.close()
     conn.close()
 
     if existing_admin:
-        flash("This email is already registered. Please login instead.", "danger")
+        flash(
+            "This email is already registered. Please login instead.",
+            "danger"
+        )
         return redirect('/admin-signup')
 
-    # 2️⃣ Save user input temporarily in session
     session['signup_name'] = name
     session['signup_email'] = email
 
-    # 3️⃣ Generate OTP and store in session
     otp = random.randint(100000, 999999)
     session['otp'] = otp
 
-    # 4️⃣ Send OTP Email
-    message = Message(
-        subject="SmartCart Admin OTP",
-        sender=config.MAIL_USERNAME,
-        recipients=[email]
-    )
-    message.body = f"Your OTP for SmartCart Admin Registration is: {otp}"
     try:
+
+        message = Message(
+            subject="SmartCart Admin OTP",
+            sender=app.config['MAIL_USERNAME'],
+            recipients=[email]
+        )
+
+        message.body = f"""
+Welcome to SmartCart Admin Registration
+
+Your OTP is:
+
+{otp}
+
+Do not share this OTP with anyone.
+"""
+
         mail.send(message)
-        flash("OTP sent to your email!", "success")
+
+        flash("OTP sent successfully!", "success")
+
         return redirect('/verify-otp')
+
     except Exception as e:
+
         print("MAIL ERROR:", str(e))
-        flash(f"Mail Error: {str(e)}", "danger")
-    return redirect('/admin-signup')
 
+        flash(
+            f"Unable to send OTP: {str(e)}",
+            "danger"
+        )
 
-
+        return redirect('/admin-signup')
 @app.route('/mail-test')
 def mail_test():
-    return f"""
-    MAIL_USERNAME={app.config.get('MAIL_USERNAME')}<br>
-    MAIL_SERVER={app.config.get('MAIL_SERVER')}<br>
-    MAIL_PORT={app.config.get('MAIL_PORT')}
-    """
 
+    try:
+
+        msg = Message(
+            subject="SmartCart Mail Test",
+            sender=app.config['MAIL_USERNAME'],
+            recipients=["medesettysai@gmail.com"]
+        )
+
+        msg.body = "Brevo SMTP is working successfully."
+
+        mail.send(msg)
+
+        return "Mail Sent Successfully ✅"
+
+    except Exception as e:
+
+        return f"MAIL ERROR: {str(e)}"
 
 
 @app.route('/smtp-test')
 def smtp_test():
+
     import smtplib
 
     try:
-        server = smtplib.SMTP("smtp.gmail.com", 587, timeout=10)
+
+        server = smtplib.SMTP(
+            "smtp-relay.brevo.com",
+            587,
+            timeout=10
+        )
+
         server.starttls()
+
         server.login(
             app.config['MAIL_USERNAME'],
             app.config['MAIL_PASSWORD']
         )
+
         server.quit()
 
-        return "SMTP Login Success ✅"
+        return "Brevo SMTP Login Success ✅"
 
     except Exception as e:
+
         return str(e)
 # ---------------------------------------------------------
 # ROUTE 2: DISPLAY OTP PAGE
