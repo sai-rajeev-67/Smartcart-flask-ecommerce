@@ -29,6 +29,8 @@ app.config['MAIL_PORT'] = config.MAIL_PORT
 app.config['MAIL_USE_TLS'] = config.MAIL_USE_TLS
 app.config['MAIL_USERNAME'] = config.MAIL_USERNAME
 app.config['MAIL_PASSWORD'] = config.MAIL_PASSWORD
+app.config['MAIL_TIMEOUT'] = 10
+app.config['MAIL_DEBUG'] = True
 
 mail = Mail(app)
 
@@ -90,13 +92,32 @@ def admin_signup():
         recipients=[email]
     )
     message.body = f"Your OTP for SmartCart Admin Registration is: {otp}"
-    mail.send(message)
+    try:
+        mail.send(message)
+    except Exception as e:
+        print("MAIL ERROR:", str(e))
+        flash(f"Mail Error: {str(e)}", "danger")
+    return redirect("/admin-signup")
 
     flash("OTP sent to your email!", "success")
     return redirect('/verify-otp')
 
 
 
+
+@app.route('/mail-test')
+def mail_test():
+    try:
+        msg = Message(
+            "Test",
+            sender=app.config['MAIL_USERNAME'],
+            recipients=[app.config['MAIL_USERNAME']]
+        )
+        msg.body = "Hello from Render"
+        mail.send(msg)
+        return "Mail sent successfully"
+    except Exception as e:
+        return f"Mail Error: {e}"
 # ---------------------------------------------------------
 # ROUTE 2: DISPLAY OTP PAGE
 # ---------------------------------------------------------
