@@ -562,44 +562,53 @@ def update_item(item_id):
 @app.route('/admin/delete-item/<int:item_id>')
 def delete_item(item_id):
 
-    if 'admin_id' not in session:
-        flash("Please login first!", "danger")
-        return redirect('/admin-login')
+    try:
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+        if 'admin_id' not in session:
+            flash("Please login first!", "danger")
+            return redirect('/admin-login')
 
-    # 1️⃣ Fetch product to get image name
-    cursor.execute("SELECT image FROM products WHERE product_id=%s", (item_id,))
-    product = cursor.fetchone()
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
 
-    if not product:
-        flash("Product not found!", "danger")
+        cursor.execute(
+            "SELECT image FROM products WHERE product_id=%s",
+            (item_id,)
+        )
+
+        product = cursor.fetchone()
+
+        if not product:
+            flash("Product not found!", "danger")
+            return redirect('/admin/item-list')
+
+        image_name = product['image']
+
+        image_path = os.path.join(
+            app.config['UPLOAD_FOLDER'],
+            image_name
+        )
+
+        if os.path.exists(image_path):
+            os.remove(image_path)
+
+        cursor.execute(
+            "DELETE FROM products WHERE product_id=%s",
+            (item_id,)
+        )
+
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
+        flash("Product deleted successfully!", "success")
+
         return redirect('/admin/item-list')
 
-    image_name = product['image']
+    except Exception as e:
 
-    # Delete image from folder
-    image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_name)
-    if os.path.exists(image_path):
-        os.remove(image_path)
-
-    # 2️⃣ Delete product from DB
-    cursor.execute("DELETE FROM products WHERE product_id=%s", (item_id,))
-    conn.commit()
-
-    cursor.close()
-    conn.close()
-
-    flash("Product deleted successfully!", "success")
-    return redirect('/admin/item-list')
-
-
-
-
-ADMIN_UPLOAD_FOLDER = 'static/uploads/admin_profiles'
-app.config['ADMIN_UPLOAD_FOLDER'] = ADMIN_UPLOAD_FOLDER
-
+        return f"DELETE ERROR: {str(e)}"
 
 
 # =================================================================
