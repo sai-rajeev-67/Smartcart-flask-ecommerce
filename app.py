@@ -593,7 +593,7 @@ def delete_item(item_id):
             os.remove(image_path)
 
         cursor.execute(
-            "DELETE FROM products WHERE product_id=%s",
+            "update products set is_active = 0 where product_id=%s",
             (item_id,)
         )
 
